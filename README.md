@@ -36,7 +36,6 @@ This system is designed for real-time human pose estimation and squat detection 
 ```sh
 export CUDA_VER=12.1
 make -C nvdsinfer_custom_impl_Yolo_pose
-make
 ```
 
 ### 2. Run the Application
@@ -47,6 +46,12 @@ pip3 install pyds-1.1.8-py3-none-linux_x86_64.whl
 ```
 
 ### 3. Run Inference
+#### Start Database:
+```sh
+docker run -d --name mongodb -p 27017:27017  mongo
+```
+
+### 4. Run Inference
 #### For multiple-person inference:
 ```sh
 python3 deepstream.py -s file:///app/multiple_person.mp4 -c config_infer_primary_yoloV8_pose.txt

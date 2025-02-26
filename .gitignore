@@ -1,0 +1,9 @@
+# Ignore specific files
+multiple_person.mp4
+nvdsinfer_custom_impl_Yolo_pose/libnvdsinfer_custom_impl_Yolo_pose.so
+nvdsinfer_custom_impl_Yolo_pose/nvdsparsepose_Yolo.o
+nvdsinfer_custom_impl_Yolo_pose/utils.o
+pyds-1.1.8-py3-none-linux_x86_64.whl
+single_person.mp4
+yolov8s-pose.onnx
+yolov8s-pose.onnx_b1_gpu0_fp32.engine

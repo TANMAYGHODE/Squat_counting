@@ -9,6 +9,13 @@ import argparse
 import platform
 from ctypes import *
 import numpy as np
+import datetime
+
+from pymongo import MongoClient
+
+client = MongoClient("mongodb://localhost:27017/")  # Local MongoDB
+db = client["Exercise_counting"]
+collection = db["Squat"]
 
 sys.path.append('/opt/nvidia/deepstream/deepstream/lib')
 import pyds
@@ -189,11 +196,25 @@ def parse_pose_from_meta(frame_meta, obj_meta):
     
     try:
         angle=calculate_angle(keypoints)
-        if angle[0] < knee_angle and angle[1] < knee_angle and angle[2] < hip_angle and angle[3]<allignment :
-            global update
+        global update
+        if angle[0] < knee_angle and angle[1] < knee_angle and angle[2] < hip_angle and angle[3]<allignment:
             if not update[obj_meta.object_id]:
                 global squatCount
                 squatCount[obj_meta.object_id] = squatCount[obj_meta.object_id]+1
+                print("Update_database")
+                user_data = {"source_id": frame_meta.source_id,
+                            "frame_id": frame_meta.frame_num,
+                            "timestamp": datetime.datetime.now(),
+                            "frame_infered": frame_meta.bInferDone,
+                            "Person_id": obj_meta.object_id,
+                            "Knee1":int(angle[0]), 
+                            "Knee2":int(angle[1]),
+                            "Hips": int(angle[2]),
+                            "Stature":int(angle[3]), 
+                            "Count":  squatCount[obj_meta.object_id],
+                            'confidence':  obj_meta.confidence
+                            }
+                insert_result = collection.insert_one(user_data)
                 update[obj_meta.object_id] = True
         else:
             update[obj_meta.object_id] = False
